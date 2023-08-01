@@ -1,5 +1,6 @@
 <?php
 
+    session_start();
     require_once "connect.php";
 
    $connection = @new mysqli($host, $db_user, $db_password, $db_name);
@@ -23,8 +24,12 @@
             if($howManyUsers>0)
             {
                 $row = $result->fetch_assoc();
-                $user = $row['user'];
-                
+                $_SESSION['user'] = $row['user'];
+                $_SESSION['drewno'] = $row['drewno'];
+                $_SESSION['kamien'] = $row['kamien'];
+                $_SESSION['zboze'] = $row['zboze'];
+                $_SESSION['email'] = $row['email'];
+                $_SESSION['dnipremium'] = $row['dnipremium'];
 
                 $result->close();
                 header('Location: game.php');
