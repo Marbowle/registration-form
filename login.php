@@ -21,6 +21,9 @@
 		$login = $_POST['login'];
 		$password = $_POST['password'];
            
+        $login = htmlentities($login, ENT_QUOTES,"UTF-8");
+        $password = htmlentities($password, ENT_QUOTES,"UTF-8");
+
        $sql = " SELECT * FROM uzytkownicy WHERE 
        user='$login' AND 
        pass='$password'";
