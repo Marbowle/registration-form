@@ -1,3 +1,13 @@
+<?php
+    session_start();
+
+    if(isset($_SESSION['loginToGame'])&&($_SESSION['loginToGame']==true))
+    {
+        header('Location: game.php');
+        exit();
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +26,9 @@
     <input type="submit" value="Log in" >
     </form>
 
+        <?php
+            if(isset($_SESSION['blad'])) echo $_SESSION['blad'];
+        ?>
 
 </body>
 </html>
