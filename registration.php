@@ -50,14 +50,85 @@
         }
         
         $hashPassword = password_hash($password1,PASSWORD_DEFAULT);
-        echo $hashPassword; exit();
-            if($correctWalidation==true)
+        
+        //Zaznaczenie checkboxa
+        if(!isset($_POST['statute']))
+        {
+            $correctWalidation=false;
+            $_SESSION['e_statute']="Brak akceptacji regulaminu";
+        }
+
+        //Tutaj dodać recaptcha
+
+        //Zabezpieczenie przed duplikatami
+
+        require_once "connect.php";
+
+            mysqli_report(MYSQLI_REPORT_STRICT);
+
+        try
+        {
+            $connection = new mysqli($host, $db_user, $db_password ,
+             $db_name); 
+             if ($connection->connect_errno!=0)
+	        {
+                throw new Exception(mysqli_connect_errno());
+	        }   
+            else
             {
-                //Wszystko oke, gracz do bazy xd
-                echo "udana walidacja";
-                exit();
-                
+                //Czy istnieje email
+                $result = $connection->query("SELECT id FROM uzytkownicy 
+                 where email='$email'");
+
+                if(!$result) throw new Exception($connection->error);
+
+                $howManyEmails = $result->num_rows;
+                if($howManyEmails>0)
+                {
+                    $correctWalidation=false;
+                    $_SESSION['e_mail']="Istnieje już kont połączone z takim 
+                    e-mailem";
+                }
+                //Sprawdzanie czy nick nie jest zajęty
+                $result = $connection->query("SELECT id FROM uzytkownicy 
+                 where user='$nick'");
+
+                if(!$result) throw new Exception($connection->error);
+
+                $howManyNicks = $result->num_rows;
+                if($howManyNicks>0)
+                {
+                    $correctWalidation=false;
+                    $_SESSION['e_nick']="Istnieje już kont z takim nickiem";
+                }
+                //Wszystko poszło okej udaje się dodać gracza do bazy
+                 if($correctWalidation==true)
+                    {
+                       if($connection->query("INSERT INTO uzytkownicy 
+                        VALUES(NULL,'$nick', '$hashPassword', '$email', 100,  
+                         100, 100, 14)"))
+                         {
+                            $_SESSION['correctRegistration']=true;
+                            header('Location: welcome.php');
+                            
+                         }
+                        else 
+                        {
+                            throw new Exception($connection->error);
+                        }
+                        
+                    }
+
+                $connection->close();
             }
+        }
+        catch(Exception $e)
+        {
+            echo '<span style="color:red">Błąd serwera!</span>';
+            echo '<p>Informacja deweloperska</p>'.$e;
+        }
+
+           
     }
 
 ?>
@@ -68,7 +139,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration form - Osadnicy</title>
-     <script src="https://www.google.com/recaptcha/api.js?render=6Lc3-3QnAAAAABlyQnEoPv8GVdY3E2u38fLbFCVU"></script>
+     
      <style>
         .error 
         {
@@ -108,18 +179,16 @@
     ?>
     <p>Repeat password: <input type="password" name="password2"></p>
     <label><input type="checkbox" name="statute"> Statute accept</label>
+     <?php
+        if(isset($_SESSION['e_statute']))
+        {
+            echo '<div class="error">'.$_SESSION['e_statute'].'</div>';
+            unset($_SESSION['e_statute']);
+        }
+    ?>
     <p><input type="submit" value="Zarejestruj się"></p>
+    
 </form>
-   <script>
-      function onClick(e) {
-        e.preventDefault();
-        grecaptcha.ready(function() {
-          grecaptcha.execute('6Lc3-3QnAAAAABlyQnEoPv8GVdY3E2u38fLbFCVU', 
-           {action: 'submit'}).then(function(token) {
-          });
-        });
-      }
-  </script>
-
+ 
 </body>
 </html>
