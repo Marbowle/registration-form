@@ -17,7 +17,8 @@
 </head>
 <body>
    Tylko martiw ujrzeli koniec wojny - Platon
-   
+    <p><a href="registration.php">Rejestracja - załóż darmowe konto!</a></p>
+     
     <form action="login.php" method="post">
     <p>Login: <input type="text" name="login">
     </p>
