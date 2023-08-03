@@ -1,0 +1,14 @@
+echo time()."</br>";
+
+         echo date('Y-m-d H:i:s')."</br>";
+        
+         $systemTime = new DateTime();
+         echo $systemTime->format('Y-m-d H:i:s');
+        
+         // W checkdate() używamy notacji amerykańskiej i należy o tym pamiętać
+         $day = 26;
+         $month = 7;
+         $year = 1975;
+        if(checkdate($month,$day,$year))
+            echo "Poprawna data";
+                else echo "Ta data nie jest poprawna";

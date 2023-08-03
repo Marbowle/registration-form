@@ -23,12 +23,22 @@
         echo "|<b> Zboże</b> ".$_SESSION['zboze']."</p>";
 
         echo "<p><strong>E-mail</strong>: ".$_SESSION['email']."</p>";
-        echo "<p><strong>Dni premium</strong>: ".$_SESSION['dnipremium']."  
+        echo "<p><strong>Data wygaśnięcia premium</strong>: ".$_SESSION['dnipremium']."  
          </p>";
 
+         $countTime = new DateTime('2026-02-13 12:14:21');
+         echo "Data i czas serwera ".$countTime->format('Y-m-d H:i:s');
+        
+         $endOfPremium = DateTime::createFromFormat('Y-m-d H:i:s', $_SESSION['dnipremium']);
+
+         $diffrentTime = $countTime->diff($endOfPremium);
+         
+         if($countTime<$endOfPremium)
+          echo "Pozostało ci jeszcze ",$diffrentTime->format('%d dni, %h godz, %i min, %s s');
+           else 
+           echo "Premium nieakatywne od: ",$diffrentTime->format('%d dni, %h 
+           godz, %i min, %s s');
 
     ?>
-
-
 </body>
 </html>

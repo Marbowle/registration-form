@@ -106,7 +106,7 @@
                     {
                        if($connection->query("INSERT INTO uzytkownicy 
                         VALUES(NULL,'$nick', '$hashPassword', '$email', 100,  
-                         100, 100, 14)"))
+                         100, 100, now() + INTERVAL 14 DAY)"))
                          {
                             $_SESSION['correctRegistration']=true;
                             header('Location: welcome.php');
